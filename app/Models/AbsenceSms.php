@@ -17,7 +17,7 @@ class AbsenceSms extends Model
 
     protected $fillable = [
         'student_id', 'date', 'status', 'attempts',
-        'next_attempt_at', 'last_error', 'sent_at',
+        'next_attempt_at', 'last_error', 'sent_at', 'sms_segments',
     ];
 
     protected $casts = [
