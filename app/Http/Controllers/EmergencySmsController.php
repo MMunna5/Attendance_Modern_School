@@ -59,7 +59,7 @@ class EmergencySmsController extends Controller
             $failed = 0;
             $missingPhone = 0;
             $billedSegments = 0;
-            $fullMessage = SmsService::appendSchoolName($messageText);
+            $fullMessage = SmsService::appendSchoolName($messageText, false);
             $segmentsPerMessage = SmsService::segmentCount($fullMessage);
 
             foreach ($recipients as $student) {
