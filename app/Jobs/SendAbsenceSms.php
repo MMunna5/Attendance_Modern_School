@@ -55,6 +55,7 @@ class SendAbsenceSms implements ShouldQueue
             $student->roll_no,
             $student->class_name
         );
+        $message->update(['sms_segments' => SmsService::segmentCount($sms)]);
 
         [$success, $response] = SmsService::send($student->parent_mobile, $sms);
 
