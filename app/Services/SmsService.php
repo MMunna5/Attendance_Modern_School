@@ -12,6 +12,37 @@ use Illuminate\Support\Facades\Log;
  */
 class SmsService
 {
+
+    /**
+     * Estimate billable SMS segments using GSM-7/UCS-2 standard capacities.
+     * Provider dashboard is authoritative if its route has custom encoding rules.
+     */
+    public static function segmentCount(string $message): int
+    {
+        $gsmBasic = "@£$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞ\x1bÆæßÉ !\"#¤%&'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà";
+        $gsmExtended = "^{}\\[~]|€\f";
+        $septets = 0;
+        $isGsm7 = true;
+
+        foreach (preg_split('//u', $message, -1, PREG_SPLIT_NO_EMPTY) as $char) {
+            if (str_contains($gsmBasic, $char)) {
+                $septets++;
+            } elseif (str_contains($gsmExtended, $char)) {
+                $septets += 2;
+            } else {
+                $isGsm7 = false;
+                break;
+            }
+        }
+
+        if ($isGsm7) {
+            return $septets <= 160 ? 1 : (int) ceil($septets / 153);
+        }
+
+        $units = intdiv(strlen(mb_convert_encoding($message, 'UTF-16BE', 'UTF-8')), 2);
+        return $units <= 70 ? 1 : (int) ceil($units / 67);
+    }
+
     public static function appendSchoolName(string $baseMessage): string
     {
         $shortName = config('school.short_name', 'School');
@@ -143,6 +174,7 @@ class SmsService
 
             Log::info("SMS delivery attempt", [
                 'to' => $normalizedNumber,
+                'sms_segments' => self::segmentCount($message),
                 'success' => $isSuccess,
                 'status' => $response->status(),
                 'response' => substr($responseText, 0, 500),
