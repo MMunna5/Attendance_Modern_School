@@ -58,7 +58,9 @@ class EmergencySmsController extends Controller
             $sent = 0;
             $failed = 0;
             $missingPhone = 0;
+            $billedSegments = 0;
             $fullMessage = SmsService::appendSchoolName($messageText);
+            $segmentsPerMessage = SmsService::segmentCount($fullMessage);
 
             foreach ($recipients as $student) {
                 if (!trim((string) $student->parent_mobile)) {
@@ -70,6 +72,7 @@ class EmergencySmsController extends Controller
                     [$success, $detail] = SmsService::send($student->parent_mobile, $fullMessage);
                     if ($success) {
                         $sent++;
+                        $billedSegments += $segmentsPerMessage;
                     } else {
                         $failed++;
                         Log::warning('Emergency SMS failed for student.', [
@@ -86,7 +89,7 @@ class EmergencySmsController extends Controller
                 }
             }
 
-            $summary = "Emergency SMS finished: {$sent} sent, {$failed} failed, {$missingPhone} skipped (no parent phone), {$recipients->count()} student(s) targeted.";
+            $summary = "Emergency SMS finished: {$sent} sent, {$failed} failed, {$missingPhone} skipped (no parent phone), {$recipients->count()} student(s) targeted. Estimated SMS segments billed: {$billedSegments}.";
             return redirect()->route('emergency-sms.index')->with('sms_summary', $summary);
         }
 
