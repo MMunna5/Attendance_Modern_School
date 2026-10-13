@@ -39,6 +39,7 @@ class SendTeacherAbsenceSms implements ShouldQueue
         }
 
         $sms = SmsService::buildTeacherAbsentMessage($teacher->name, $message->date->format('d-M-y'));
+        $message->update(['sms_segments' => SmsService::segmentCount($sms)]);
         [$success, $response] = SmsService::send($teacher->mobile, $sms);
 
         if ($success) {
