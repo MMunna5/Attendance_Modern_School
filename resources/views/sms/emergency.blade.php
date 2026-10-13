@@ -97,7 +97,7 @@
 
         <div>
             <label for="message" class="block text-sm font-semibold text-ink mb-2">Notice message</label>
-            <textarea id="message" data-school-name="{{ config('school.short_name', 'School') }}" name="message" rows="5" maxlength="1000" required class="w-full rounded-xl border border-gray-300 p-3 focus:border-forest focus:ring-1 focus:ring-forest" placeholder="Write the notice you want to send to parents...">{{ old('message', '') }}</textarea>
+            <textarea id="message" data-school-name="{{ config('school.full_name', 'School') }}" name="message" rows="5" maxlength="1000" required class="w-full rounded-xl border border-gray-300 p-3 focus:border-forest focus:ring-1 focus:ring-forest" placeholder="Write the notice you want to send to parents...">{{ old('message', '') }}</textarea>
             <p class="text-xs text-ink-soft mt-1">Maximum 1000 characters. SMS charges depend on your SMS provider and message length.</p>
             <p id="sms-segment-preview" class="text-sm font-semibold text-forest mt-2" aria-live="polite"></p>
         </div>
