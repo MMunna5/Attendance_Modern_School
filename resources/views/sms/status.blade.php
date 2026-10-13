@@ -28,6 +28,7 @@
             <div><div class="text-lg font-bold text-absent">{{ $c['failed'] }}</div><div class="text-[10px] text-ink-soft">Failed</div></div>
             <div><div class="text-lg font-bold text-amber-600">{{ $c['pending'] }}</div><div class="text-[10px] text-ink-soft">Pending</div></div>
         </div>
+        <div class="text-xs text-ink-soft mt-3">Estimated billable SMS segments: <strong>{{ $c['segments'] }}</strong></div>
     </div>
     @endforeach
 </div>
