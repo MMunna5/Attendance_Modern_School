@@ -54,6 +54,10 @@ class SmsStatusController extends Controller
 
         $counts = [
             'student' => [
+                'segments' => AbsenceSms::whereYear('date', $year)
+                    ->whereMonth('date', $month)
+                    ->where('status', AbsenceSms::STATUS_SENT)
+                    ->sum('sms_segments'),
                 'sent' => AbsenceSms::whereYear('date', $year)
                     ->whereMonth('date', $month)
                     ->where('status', AbsenceSms::STATUS_SENT)
@@ -71,6 +75,10 @@ class SmsStatusController extends Controller
             ],
 
             'teacher' => [
+                'segments' => TeacherAbsenceSms::whereYear('date', $year)
+                    ->whereMonth('date', $month)
+                    ->where('status', TeacherAbsenceSms::STATUS_SENT)
+                    ->sum('sms_segments'),
                 'sent' => TeacherAbsenceSms::whereYear('date', $year)
                     ->whereMonth('date', $month)
                     ->where('status', TeacherAbsenceSms::STATUS_SENT)
