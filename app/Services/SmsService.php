@@ -43,12 +43,38 @@ class SmsService
         return $units <= 70 ? 1 : (int) ceil($units / 67);
     }
 
-    public static function appendSchoolName(string $baseMessage): string
+    /** Count GSM-7 septets or Unicode UTF-16 code units for the 159-unit rule. */
+    public static function smsUnitCount(string $message): int
     {
-        $shortName = config('school.short_name', 'School');
-        return $baseMessage . "\n" . $shortName;
+        $gsmBasic = "@£\\$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞ\x1bÆæßÉ !\"#¤%&'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà";
+        $gsmExtended = "^{}\\\\[~]|€\f";
+        $septets = 0;
+
+        foreach (preg_split('//u', $message, -1, PREG_SPLIT_NO_EMPTY) as $char) {
+            if (str_contains($gsmBasic, $char)) {
+                $septets++;
+            } elseif (str_contains($gsmExtended, $char)) {
+                $septets += 2;
+            } else {
+                return intdiv(strlen(mb_convert_encoding($message, 'UTF-16BE', 'UTF-8')), 2);
+            }
+        }
+
+        return $septets;
     }
 
+    public static function appendSchoolName(string $baseMessage, bool $shortIfOver159 = true): string
+    {
+        $fullName = config('school.full_name', 'School');
+        $shortName = config('school.short_name', 'School');
+        $fullMessage = $baseMessage . "\n" . $fullName;
+
+        if ($shortIfOver159 && self::smsUnitCount($fullMessage) > 159) {
+            return $baseMessage . "\n" . $shortName;
+        }
+
+        return $fullMessage;
+    }
     public static function buildAbsentMessage(string $studentName, string $dateStr, ?string $rollNo = null, ?string $className = null): string
     {
         $studentDetails = $studentName;
