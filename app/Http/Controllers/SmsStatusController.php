@@ -18,7 +18,29 @@ class SmsStatusController extends Controller
             $kind = $request->input('kind');
             $id = $request->input('id');
 
-            if ($action === 'retry') {
+            if ($action === 'retry_all') {
+                AbsenceSms::where('status', AbsenceSms::STATUS_FAILED)
+                    ->chunkById(100, function ($messages) {
+                        foreach ($messages as $msg) {
+                            $msg->update([
+                                'status' => AbsenceSms::STATUS_PENDING,
+                                'next_attempt_at' => null,
+                            ]);
+                            SendAbsenceSms::dispatch($msg->id);
+                        }
+                    });
+
+                TeacherAbsenceSms::where('status', TeacherAbsenceSms::STATUS_FAILED)
+                    ->chunkById(100, function ($messages) {
+                        foreach ($messages as $msg) {
+                            $msg->update([
+                                'status' => TeacherAbsenceSms::STATUS_PENDING,
+                                'next_attempt_at' => null,
+                            ]);
+                            SendTeacherAbsenceSms::dispatch($msg->id);
+                        }
+                    });
+            } elseif ($action === 'retry') {
                 if ($kind === 'student') {
                     $msg = AbsenceSms::find($id);
 
