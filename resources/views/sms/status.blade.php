@@ -12,15 +12,6 @@
 
 @section('content')
 
-<form method="post" action="{{ route('sms-status.index') }}" class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-5 flex flex-wrap items-center justify-between gap-3">
-    @csrf
-    <input type="hidden" name="action" value="retry_all">
-    <div>
-        <div class="font-bold text-ink">Retry All Failed SMS</div>
-        <div class="text-xs text-ink-soft">All failed student and teacher SMS will be queued again.</div>
-    </div>
-    <button type="submit" onclick="return confirm('Retry all failed student and teacher SMS?')" class="bg-gold text-white text-sm font-bold px-5 py-2.5 rounded-lg hover:opacity-90 transition">Retry All Failed</button>
-</form>
 <form method="get" class="bg-white border border-gray-200 rounded-xl p-4 mb-5 shadow-sm flex flex-wrap gap-3 items-end">
     <div>
         <label for="sms-month" class="block text-xs font-semibold text-ink-soft mb-1.5">Month</label>
@@ -48,7 +39,17 @@
 </div>
 
 @foreach([['Student — Failed', $studentFailed, 'student'], ['Student — Pending', $studentPending, 'student'], ['Teacher — Failed', $teacherFailed, 'teacher'], ['Teacher — Pending', $teacherPending, 'teacher']] as [$label, $list, $kind])
-<div class="font-display text-[11px] tracking-widest uppercase text-ink-soft mb-3 mt-6">{{ $label }} ({{ $list->count() }})</div>
+<div class="font-display text-[11px] tracking-widest uppercase text-ink-soft mb-3 mt-6 flex flex-wrap items-center justify-between gap-3">
+    <span>{{ $label }} ({{ $list->count() }})</span>
+    @if(str_contains($label, 'Failed') && $list->count() > 0)
+    <form method="post" action="{{ route('sms-status.index') }}" class="inline">
+        @csrf
+        <input type="hidden" name="action" value="retry_all">
+        <input type="hidden" name="kind" value="{{ $kind }}">
+        <button type="submit" onclick="return confirm('Retry all failed {{ $kind }} SMS?')" class="bg-gold text-white text-xs font-bold px-3 py-2 rounded-lg hover:opacity-90 transition">Retry All {{ ucfirst($kind) }} Failed</button>
+    </form>
+    @endif
+</div>
 <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm mb-5">
     @forelse($list as $msg)
     <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 px-4 py-3 items-center border-t border-gray-100 text-sm first:border-t-0">
