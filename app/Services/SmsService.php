@@ -14,8 +14,9 @@ class SmsService
 {
 
     /**
-     * Estimate billable SMS segments using GSM-7/UCS-2 standard capacities.
-     * Provider dashboard is authoritative if its route has custom encoding rules.
+     * Calculate GreenWeb billable SMS segments from the exact message text.
+     * GSM-7: 160 units for one segment, then 153 per concatenated segment.
+     * Unicode/UCS-2: 70 UTF-16 code units for one segment, then 67 per concatenated segment.
      */
     public static function segmentCount(string $message): int
     {
