@@ -147,6 +147,7 @@ class SmsStatusController extends Controller
 
             'monthStr' => $monthStr,
             'counts' => $counts,
+            'totalSegments' => $counts['student']['segments'] + $counts['teacher']['segments'],
         ]);
     }
 
