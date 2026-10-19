@@ -12,6 +12,8 @@
 
 @section('content')
 
+<div class="bg-forest-deep text-white rounded-xl p-5 mb-5 shadow-sm"><div class="text-xs font-bold tracking-widest uppercase text-white/75 mb-2">Total SMS · Billable Segments</div><div class="text-4xl font-extrabold">{{ $totalSegments }}</div><div class="text-sm text-white/80 mt-2">Exact total for the selected month, including appended school names</div></div>
+
 <form method="get" class="bg-white border border-gray-200 rounded-xl p-4 mb-5 shadow-sm flex flex-wrap gap-3 items-end">
     <div>
         <label for="sms-month" class="block text-xs font-semibold text-ink-soft mb-1.5">Month</label>
