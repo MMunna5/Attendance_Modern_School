@@ -37,11 +37,11 @@ class SmsService
         }
 
         if ($isGsm7) {
-            return $septets <= 160 ? 1 : (int) ceil($septets / 153);
+            return $septets <= 160 ? 1 : intdiv($septets + 152, 153);
         }
 
         $units = intdiv(strlen(mb_convert_encoding($message, 'UTF-16BE', 'UTF-8')), 2);
-        return $units <= 70 ? 1 : (int) ceil($units / 67);
+        return $units <= 70 ? 1 : intdiv($units + 66, 67);
     }
 
     /** Count GSM-7 septets or Unicode UTF-16 code units for the 159-unit rule. */
