@@ -14,7 +14,7 @@ class SmsService
 {
 
     /**
-     * Calculate GreenWeb billable SMS segments from the exact message text.
+     * Calculate billable SMS segments from the complete message text, including the appended school name.
      * GSM-7: 160 units for one segment, then 153 per concatenated segment.
      * Unicode/UCS-2: 70 UTF-16 code units for one segment, then 67 per concatenated segment.
      */
