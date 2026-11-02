@@ -11,7 +11,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Noto+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -28,8 +28,8 @@
                         absent: '#B33A3A',
                     },
                     fontFamily: {
-                        display: ['"Special Elite"', 'monospace'],
-                        sans: ['"Noto Sans"', 'sans-serif'],
+                        display: ['"Hind Siliguri"', 'sans-serif'],
+                        sans: ['"Hind Siliguri"', 'sans-serif'],
                     }
                 }
             }
@@ -38,7 +38,7 @@
 
     <style>
         *, *::before, *::after { box-sizing: border-box; }
-        body { font-family: 'Noto Sans', sans-serif; overflow-x: hidden; }
+        body { font-family: 'Hind Siliguri', sans-serif; overflow-x: hidden; }
         button, a, input, select { -webkit-tap-highlight-color: transparent; }
         button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible {
             outline: 3px solid rgba(232, 197, 106, 0.75); outline-offset: 2px;
@@ -73,7 +73,7 @@
             --ui-radius:12px; --ui-shadow:0 3px 12px rgba(30,61,50,.07);
         }
         html{scroll-behavior:smooth}
-        body{color:var(--ui-ink);background:var(--ui-paper);font-family:'Noto Sans',sans-serif;-webkit-font-smoothing:antialiased}
+        body{color:var(--ui-ink);background:var(--ui-paper);font-family:'Hind Siliguri',sans-serif;-webkit-font-smoothing:antialiased}
         main{flex:1 0 auto}
         button,input,select,textarea{font:inherit}
         button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
@@ -159,6 +159,9 @@ main .dash-link{min-height:56px;padding:8px 10px;gap:7px}
 main .dash-link-icon{width:30px;height:30px}
 @media(max-width:640px){main a.block.bg-gradient-to-br{min-height:82px!important;padding:11px!important}}
 
+
+/* One consistent font across the entire application (Bangla + English) */
+html,body,body *{font-family:'Hind Siliguri',sans-serif!important}
 </style>
 
     @stack('styles')
