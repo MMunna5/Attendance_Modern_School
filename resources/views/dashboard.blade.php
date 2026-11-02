@@ -81,9 +81,9 @@
     </div>
 </div>
 
-<div class="font-display text-[11px] tracking-widest uppercase text-ink-soft mb-2">Quick Access</div>
+<div class="font-display text-[11px] tracking-widest uppercase text-ink-soft mb-3">Quick Access</div>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
     @php
         $links = [
             ['attendance.show', 'Take Student Attendance', 'Mark attendance for any class'],
@@ -98,9 +98,9 @@
         ];
     @endphp
     @foreach($links as [$route, $title, $desc])
-    <a href="{{ route($route) }}" class="block bg-white border border-gray-200 rounded-xl p-3 shadow-sm hover:shadow-md hover:border-forest transition min-h-[62px]">
-        <h2 class="text-sm font-bold text-forest-deep">{{ $title }}</h2>
-        <p class="text-xs text-ink-soft mt-0.5 leading-snug">{{ $desc }}</p>
+    <a href="{{ route($route) }}" class="block bg-gradient-to-br from-green-50 to-white border border-green-200 rounded-xl p-4 shadow-sm hover:shadow-md hover:border-forest transition min-h-[88px]">
+        <h2 class="text-[15px] font-bold text-forest-deep">{{ $title }}</h2>
+        <p class="text-xs text-ink-soft mt-1 leading-snug">{{ $desc }}</p>
     </a>
     @endforeach
 </div>
