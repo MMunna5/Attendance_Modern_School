@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\EmergencySmsLog;
 use App\Services\SmsService;
 use App\Support\ClassChoices;
 use Illuminate\Http\Request;
@@ -68,12 +69,17 @@ class EmergencySmsController extends Controller
                     continue;
                 }
 
+                $billingLog = null;
                 try {
+                    // Create the billing record before sending so a delivered SMS cannot go unlogged.
+                    $billingLog = EmergencySmsLog::create(['sms_segments' => $segmentsPerMessage]);
                     [$success, $detail] = SmsService::send($student->parent_mobile, $fullMessage);
                     if ($success) {
+                        $billingLog->update(['sent_at' => now()]);
                         $sent++;
                         $billedSegments += $segmentsPerMessage;
                     } else {
+                        $billingLog->delete();
                         $failed++;
                         Log::warning('Emergency SMS failed for student.', [
                             'student_id' => $student->id,
@@ -81,8 +87,11 @@ class EmergencySmsController extends Controller
                         ]);
                     }
                 } catch (\Throwable $exception) {
+                    if ($billingLog) {
+                        $billingLog->delete();
+                    }
                     $failed++;
-                    Log::error('Emergency SMS exception.', [
+                    Log::error('Emergency SMS exception or billing-log failure.', [
                         'student_id' => $student->id,
                         'error' => $exception->getMessage(),
                     ]);
