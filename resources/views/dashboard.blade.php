@@ -7,16 +7,10 @@
 <style>
 <!-- Compact Quick Access cards to reduce dashboard vertical height -->
 @media(min-width:768px){
-  .grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-3.gap-4 > a{
-    min-height:76px!important;padding:11px 12px!important
-  }
+  .dashboard-quick-access-grid > a{min-height:76px!important;padding:11px 12px!important}
 }
-.grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-3.gap-4 > a h2{
-  font-size:13px!important;line-height:1.25!important
-}
-.grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-3.gap-4 > a p{
-  margin-top:5px!important;font-size:11px!important;line-height:1.3!important
-}
+.dashboard-quick-access-grid > a h2{font-size:13px!important;line-height:1.25!important}
+.dashboard-quick-access-grid > a p{margin-top:5px!important;font-size:11px!important;line-height:1.3!important}
 </style>
 
 
@@ -99,7 +93,7 @@
 
 <div class="font-display text-[11px] tracking-widest uppercase text-ink-soft mb-3">Quick Access</div>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+<div class="dashboard-quick-access-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
     @php
         $links = [
             ['attendance.show', 'Take Student Attendance', 'Mark attendance for any class'],
