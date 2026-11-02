@@ -6,11 +6,11 @@
 
 <style>
 /* Slightly larger Quick Access cards for comfortable reading and tapping */
-.dashboard-quick-access-grid > a{min-height:104px!important;padding:16px 17px!important}
+.dashboard-quick-access-grid > a{min-height:114px!important;padding:18px 19px!important}
 .dashboard-quick-access-grid > a h2{font-size:15px!important;line-height:1.35!important}
 .dashboard-quick-access-grid > a p{margin-top:7px!important;font-size:12.5px!important;line-height:1.4!important}
 @media(max-width:767px){
-  .dashboard-quick-access-grid > a{min-height:96px!important;padding:14px 15px!important}
+  .dashboard-quick-access-grid > a{min-height:104px!important;padding:16px 17px!important}
 }
 </style>
 
