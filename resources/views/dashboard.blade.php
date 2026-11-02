@@ -13,10 +13,10 @@
   .dashboard-quick-access-grid > a{min-height:114px!important;padding:18px 19px!important}
 }
 
-/* Larger titles for the first three student Quick Access actions only */
-.dashboard-quick-access-grid > a:nth-child(-n+3) h2{font-size:18px!important;line-height:1.35!important}
+/* Keep every Quick Access card title at the same enlarged size */
+.dashboard-quick-access-grid > a h2{font-size:18px!important;line-height:1.35!important}
 @media(max-width:767px){
-  .dashboard-quick-access-grid > a:nth-child(-n+3) h2{font-size:17px!important;line-height:1.35!important}
+  .dashboard-quick-access-grid > a h2{font-size:17px!important;line-height:1.35!important}
 }
 </style>
 
