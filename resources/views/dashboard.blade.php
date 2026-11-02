@@ -4,6 +4,22 @@
 
 @section('content')
 
+<style>
+<!-- Compact Quick Access cards to reduce dashboard vertical height -->
+@media(min-width:768px){
+  .grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-3.gap-4 > a{
+    min-height:76px!important;padding:11px 12px!important
+  }
+}
+.grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-3.gap-4 > a h2{
+  font-size:13px!important;line-height:1.25!important
+}
+.grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-3.gap-4 > a p{
+  margin-top:5px!important;font-size:11px!important;line-height:1.3!important
+}
+</style>
+
+
 @if($teacher)
 <div class="mb-2 font-display text-[11px] tracking-widest uppercase text-ink-soft">
     Today · {{ \Carbon\Carbon::parse($today)->format('l, d F Y') }}
