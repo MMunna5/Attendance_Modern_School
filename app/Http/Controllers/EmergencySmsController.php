@@ -72,10 +72,12 @@ class EmergencySmsController extends Controller
                 $billingLog = null;
                 try {
                     // Create the billing record before sending so a delivered SMS cannot go unlogged.
-                    $billingLog = EmergencySmsLog::create(['sms_segments' => $segmentsPerMessage]);
+                    $billingLog = EmergencySmsLog::create([
+                        'sms_segments' => $segmentsPerMessage,
+                        'sent_at' => now(),
+                    ]);
                     [$success, $detail] = SmsService::send($student->parent_mobile, $fullMessage);
                     if ($success) {
-                        $billingLog->update(['sent_at' => now()]);
                         $sent++;
                         $billedSegments += $segmentsPerMessage;
                     } else {
