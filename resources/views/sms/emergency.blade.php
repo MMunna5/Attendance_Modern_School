@@ -13,7 +13,12 @@
     </div>
 
     @if(session('sms_summary'))
-        <div class="rounded-xl border border-green-200 bg-green-50 text-green-800 px-4 py-3 mb-5 text-sm">{{ session('sms_summary') }}</div>
+        <div class="rounded-2xl border border-green-200 bg-green-50 text-green-900 p-5 mb-5">
+            <div class="text-xs font-bold tracking-widest uppercase text-green-700 mb-1">Actual Billable SMS Segments</div>
+            <div class="text-4xl font-extrabold text-green-950">{{ session('sms_billable_segments') }}</div>
+            <div class="text-sm font-semibold mt-1 mb-2">Use this number for SMS billing</div>
+            <p class="text-sm text-green-800">{{ session('sms_summary') }}</p>
+        </div>
     @endif
     @if($errors->any())
         <div class="rounded-xl border border-red-200 bg-red-50 text-red-800 px-4 py-3 mb-5 text-sm">
