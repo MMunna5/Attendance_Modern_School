@@ -18,6 +18,32 @@
         Log Out
     </button>
 </form>
+
+<style>
+.history-class-dropdown{position:relative;width:100%;font-family:'Hind Siliguri',sans-serif!important}
+.history-class-dropdown summary{list-style:none;cursor:pointer;width:100%;min-height:44px;display:flex;align-items:center;justify-content:space-between;border:1px solid #cbd8ce;border-radius:9px;background:#fff;padding:9px 12px;font:500 14px 'Hind Siliguri',sans-serif!important;color:#263b31}
+.history-class-dropdown summary::-webkit-details-marker{display:none}
+.history-class-dropdown summary:after{content:'⌄';font-size:18px;margin-left:10px}
+.history-class-menu{position:absolute;z-index:50;top:calc(100% + 5px);left:0;right:0;max-height:260px;overflow-y:auto;background:#fff;border:1px solid #cbd8ce;border-radius:10px;padding:5px;box-shadow:0 8px 22px rgba(20,40,30,.14)}
+.history-class-option{display:block;width:100%;text-align:left;padding:9px 11px;border:0;border-radius:6px;background:#fff;color:#263b31;font:500 14px 'Hind Siliguri',sans-serif!important;cursor:pointer}
+.history-class-option:hover,.history-class-option:focus{background:#edf4ef;outline:none}
+</style>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+ const dropdown=document.querySelector('.history-class-dropdown');
+ const value=document.getElementById('history-class-value');
+ const label=document.getElementById('history-class-label');
+ if(!dropdown||!value||!label)return;
+ dropdown.querySelectorAll('[data-class-value]').forEach(function(option){
+  option.addEventListener('click',function(){
+   value.value=option.getAttribute('data-class-value');
+   label.textContent=option.textContent.trim();
+   dropdown.open=false;
+  });
+ });
+ document.addEventListener('click',function(event){if(!dropdown.contains(event.target))dropdown.open=false;});
+});
+</script>
 @endsection
 
 @section('content')
@@ -37,15 +63,14 @@
     <input type="hidden" name="view" value="{{ $viewMode }}">
     <div class="flex-1 min-w-[140px]">
         <label class="block text-xs font-semibold text-ink-soft mb-1.5">Class</label>
-        <select name="class" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-forest">
-            <option value="">Select a class</option>
-            @if($viewMode === 'day')
-            <option value="__all__" @if($allClassesSelected) selected @endif>All Classes</option>
-            @endif
-            @foreach($allClasses as $c)
-            <option value="{{ $c['name'] }}" @if($c['is_selected']) selected @endif>Class {{ $c['name'] }}</option>
-            @endforeach
-        </select>
+        <input type="hidden" name="class" id="history-class-value" value="{{ $classFilter }}">
+        <details class="history-class-dropdown">
+            <summary id="history-class-label">@if($allClassesSelected)All Classes @elseif($classFilter)Class {{ $classFilter }}@else Select a class @endif</summary>
+            <div class="history-class-menu">
+                <button type="button" class="history-class-option" data-class-value="">Select a class</button>
+                @if($viewMode === 'day')<button type="button" class="history-class-option" data-class-value="__all__">All Classes</button>@endif @foreach($allClasses as $c)<button type="button" class="history-class-option" data-class-value="{{ $c['name'] }}">Class {{ $c['name'] }}</button>@endforeach
+            </div>
+        </details>
     </div>
 
     @if($viewMode === 'month')
