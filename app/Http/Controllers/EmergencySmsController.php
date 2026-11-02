@@ -99,7 +99,9 @@ class EmergencySmsController extends Controller
             }
 
             $summary = "Emergency SMS finished: {$sent} sent, {$failed} failed, {$missingPhone} skipped (no parent phone), {$recipients->count()} student(s) targeted. Billable SMS segments (including school name): {$billedSegments}.";
-            return redirect()->route('emergency-sms.index')->with('sms_summary', $summary);
+            return redirect()->route('emergency-sms.index')
+                ->with('sms_summary', $summary)
+                ->with('sms_billable_segments', $billedSegments);
         }
 
         $studentsData = $students->map(fn ($student) => [
