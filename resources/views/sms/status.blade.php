@@ -12,7 +12,12 @@
 
 @section('content')
 
-<div class="bg-forest-deep text-white rounded-xl p-5 mb-5 shadow-sm"><div class="text-xs font-bold tracking-widest uppercase text-white/75 mb-2">Total SMS · Billable Segments</div><div class="text-4xl font-extrabold">{{ $totalSegments }}</div><div class="text-sm text-white/80 mt-2">Exact total for the selected month, including appended school names</div></div>
+<div class="bg-forest-deep text-white rounded-2xl p-6 mb-5 shadow-md">
+    <div class="text-xs font-bold tracking-widest uppercase text-white/75 mb-2">Selected Month · {{ $monthStr }}</div>
+    <div class="text-5xl sm:text-6xl font-extrabold leading-none">{{ $totalSegments }}</div>
+    <div class="text-sm font-bold mt-2">TOTAL BILLABLE SMS SEGMENTS</div>
+    <div class="text-xs text-white/75 mt-1">{{ $totalMessages }} messages successfully sent · This is the chargeable billing count</div>
+</div>
 
 <form method="get" class="bg-white border border-gray-200 rounded-xl p-4 mb-5 shadow-sm flex flex-wrap gap-3 items-end">
     <div>
@@ -25,15 +30,21 @@
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
     @foreach([['Student', $counts['student']], ['Teacher', $counts['teacher']]] as [$label, $c])
     <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
-        <div class="font-display text-[11px] tracking-widest uppercase text-ink-soft mb-3">{{ $label }} SMS · {{ $monthStr }}</div>
+        <div class="font-display text-[11px] tracking-widest uppercase text-ink-soft mb-2">{{ $label }} · {{ $monthStr }}</div>
+        <div class="text-3xl font-extrabold text-forest-deep">{{ $c['segments'] }}</div>
+        <div class="text-[11px] text-ink-soft mb-3">Billable segments · {{ $c['sent'] }} messages sent</div>
         <div class="grid grid-cols-3 gap-2 text-center">
             <div><div class="text-lg font-bold text-present">{{ $c['sent'] }}</div><div class="text-[10px] text-ink-soft">Sent</div></div>
             <div><div class="text-lg font-bold text-absent">{{ $c['failed'] }}</div><div class="text-[10px] text-ink-soft">Failed</div></div>
             <div><div class="text-lg font-bold text-amber-600">{{ $c['pending'] }}</div><div class="text-[10px] text-ink-soft">Pending</div></div>
         </div>
-        <div class="text-xs text-ink-soft mt-3">Billable SMS segments: <strong>{{ $c['segments'] }}</strong></div>
+         
     </div>
-    @endforeach
+    <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+        <div class="font-display text-[11px] tracking-widest uppercase text-ink-soft mb-2">Emergency · {{ $monthStr }}</div>
+        <div class="text-3xl font-extrabold text-forest-deep">{{ $counts['emergency']['segments'] }}</div>
+        <div class="text-[11px] text-ink-soft mt-1">Billable segments · {{ $counts['emergency']['sent'] }} messages sent</div>
+    </div>
 </div>
 
 <div class="text-sm text-ink-soft mb-5">
