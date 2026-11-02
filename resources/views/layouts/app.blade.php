@@ -162,6 +162,25 @@ main .dash-link-icon{width:30px;height:30px}
 
 /* One consistent font across the entire application (Bangla + English) */
 html,body,body *{font-family:'Hind Siliguri',sans-serif!important}
+
+/* Explicitly apply the application font to native form controls and dropdown choices */
+html body select,
+html body select option,
+html body select optgroup,
+html body option,
+html body optgroup,
+html body input,
+html body textarea,
+html body button {
+    font-family: 'Hind Siliguri', sans-serif !important;
+}
+html body select,
+html body select option,
+html body select optgroup {
+    font-size: 14px !important;
+    font-weight: 500;
+}
+
 </style>
 
     @stack('styles')
