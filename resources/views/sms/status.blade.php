@@ -27,18 +27,26 @@
     <button type="submit" class="bg-forest text-white text-sm font-bold px-5 py-2.5 rounded-lg hover:bg-forest-deep transition">View Month</button>
 </form>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-    @foreach([['Student', $counts['student']], ['Teacher', $counts['teacher']]] as [$label, $c])
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
     <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
-        <div class="font-display text-[11px] tracking-widest uppercase text-ink-soft mb-2">{{ $label }} · {{ $monthStr }}</div>
-        <div class="text-3xl font-extrabold text-forest-deep">{{ $c['segments'] }}</div>
-        <div class="text-[11px] text-ink-soft mb-3">Billable segments · {{ $c['sent'] }} messages sent</div>
+        <div class="font-display text-[11px] tracking-widest uppercase text-ink-soft mb-2">Student · {{ $monthStr }}</div>
+        <div class="text-3xl font-extrabold text-forest-deep">{{ $counts['student']['segments'] }}</div>
+        <div class="text-[11px] text-ink-soft mb-3">Billable segments · {{ $counts['student']['sent'] }} messages sent</div>
         <div class="grid grid-cols-3 gap-2 text-center">
-            <div><div class="text-lg font-bold text-present">{{ $c['sent'] }}</div><div class="text-[10px] text-ink-soft">Sent</div></div>
-            <div><div class="text-lg font-bold text-absent">{{ $c['failed'] }}</div><div class="text-[10px] text-ink-soft">Failed</div></div>
-            <div><div class="text-lg font-bold text-amber-600">{{ $c['pending'] }}</div><div class="text-[10px] text-ink-soft">Pending</div></div>
+            <div><div class="text-lg font-bold text-present">{{ $counts['student']['sent'] }}</div><div class="text-[10px] text-ink-soft">Sent</div></div>
+            <div><div class="text-lg font-bold text-absent">{{ $counts['student']['failed'] }}</div><div class="text-[10px] text-ink-soft">Failed</div></div>
+            <div><div class="text-lg font-bold text-amber-600">{{ $counts['student']['pending'] }}</div><div class="text-[10px] text-ink-soft">Pending</div></div>
         </div>
-         
+    </div>
+    <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+        <div class="font-display text-[11px] tracking-widest uppercase text-ink-soft mb-2">Teacher · {{ $monthStr }}</div>
+        <div class="text-3xl font-extrabold text-forest-deep">{{ $counts['teacher']['segments'] }}</div>
+        <div class="text-[11px] text-ink-soft mb-3">Billable segments · {{ $counts['teacher']['sent'] }} messages sent</div>
+        <div class="grid grid-cols-3 gap-2 text-center">
+            <div><div class="text-lg font-bold text-present">{{ $counts['teacher']['sent'] }}</div><div class="text-[10px] text-ink-soft">Sent</div></div>
+            <div><div class="text-lg font-bold text-absent">{{ $counts['teacher']['failed'] }}</div><div class="text-[10px] text-ink-soft">Failed</div></div>
+            <div><div class="text-lg font-bold text-amber-600">{{ $counts['teacher']['pending'] }}</div><div class="text-[10px] text-ink-soft">Pending</div></div>
+        </div>
     </div>
     <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
         <div class="font-display text-[11px] tracking-widest uppercase text-ink-soft mb-2">Emergency · {{ $monthStr }}</div>
