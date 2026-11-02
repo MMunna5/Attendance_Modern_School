@@ -47,8 +47,9 @@ class SmsService
     /** Count GSM-7 septets or Unicode UTF-16 code units for the 159-unit rule. */
     public static function smsUnitCount(string $message): int
     {
-        $gsmBasic = "@£\\$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞ\x1bÆæßÉ !\"#¤%&'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà";
-        $gsmExtended = "^{}\\\\[~]|€\f";
+        // Keep these character sets identical to segmentCount() above.
+        $gsmBasic = "@£\$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞ\x1bÆæßÉ !\"#¤%&'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà";
+        $gsmExtended = "^{}\\[~]|€\f";
         $septets = 0;
 
         foreach (preg_split('//u', $message, -1, PREG_SPLIT_NO_EMPTY) as $char) {
