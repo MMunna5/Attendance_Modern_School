@@ -3,7 +3,33 @@
 @section('header_title', 'Students')
 
 @section('content')
-<form method="get" class="bg-white border border-gray-200 rounded-xl p-4 mb-6 shadow-sm flex flex-wrap gap-3 items-end">
+
+<style>
+/* Student directory: clear section colors, readable cards and consistent spacing */
+.student-directory-form{background:#edf3ee!important;border:1px solid #cbd9ce!important;border-radius:14px!important;padding:14px!important;margin-bottom:16px!important;gap:10px!important}
+.student-directory-form label{color:#385345!important;font-size:12px!important}
+.student-class-grid a{background:#e5eee7!important;border:1px solid #bfd0c3!important;border-radius:14px!important;padding:18px 12px!important;box-shadow:0 2px 7px rgba(30,61,50,.07)!important}
+.student-class-grid a:nth-child(3n+2){background:#e9eef5!important;border-color:#c8d3e0!important}
+.student-class-grid a:nth-child(3n){background:#f4eee2!important;border-color:#dfd1b8!important}
+.student-class-grid a:hover{filter:brightness(.98);transform:translateY(-2px)}
+.student-class-grid a>div:first-child{font-size:25px!important}
+.student-row{background:#f0f5f1!important;border:1px solid #d1ded4!important;border-radius:12px!important;padding:11px 14px!important;box-shadow:0 1px 4px rgba(30,61,50,.05)!important;gap:12px!important}
+.student-row:nth-child(even){background:#edf1f6!important;border-color:#d2dce7!important}
+.student-row:hover{background:#e4eee6!important}
+.student-roll{background:#dce9df!important;border-color:#91ad99!important;color:#234b34!important;width:40px!important;height:40px!important}
+.student-name{color:#203d2c!important;font-size:14px!important}
+.student-meta{color:#64756a!important}
+.student-empty{background:#f0f5f1!important;border:1px solid #d1ded4!important;border-radius:14px!important;padding:36px 16px!important}
+@media(max-width:640px){
+ .student-directory-form{padding:10px!important;margin-bottom:12px!important}
+ .student-class-grid{gap:10px!important}
+ .student-class-grid a{padding:14px 8px!important}
+ .student-row{padding:9px!important;gap:9px!important}
+ .student-row .student-actions{gap:10px!important;font-size:12px!important}
+}
+</style>
+
+<form method="get" class="student-directory-form bg-white border border-gray-200 rounded-xl p-4 mb-6 shadow-sm flex flex-wrap gap-3 items-end">
     <div class="flex-1 min-w-[140px]">
         <label class="block text-xs font-semibold text-ink-soft mb-1.5">Class</label>
         <select name="class" onchange="this.form.submit()" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-forest">
@@ -24,9 +50,9 @@
 
 @if(!$classFilter && !$query)
 <div class="font-display text-[11px] tracking-widest uppercase text-ink-soft mb-4">Choose a Class</div>
-<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+<div class="student-class-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
     @forelse($allClasses as $c)
-    <a href="?class={{ $c['name'] }}" class="bg-white border border-gray-200 rounded-2xl p-6 text-center shadow-sm hover:shadow-md hover:border-forest hover:-translate-y-0.5 transition-all duration-200">
+    <a href="?class={{ $c['name'] }}" class="student-class-card bg-white border border-gray-200 rounded-2xl p-6 text-center shadow-sm hover:shadow-md hover:border-forest hover:-translate-y-0.5 transition-all duration-200">
         <div class="text-2xl font-bold text-forest-deep mb-1">{{ $c['name'] }}</div>
         <div class="text-xs text-ink-soft">Class</div>
     </a>
@@ -48,18 +74,18 @@
 
 <div class="space-y-2.5">
     @foreach($students as $student)
-    <div class="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4 shadow-sm hover:shadow-md transition">
-        <div class="w-11 h-11 rounded-full border-2 border-forest flex items-center justify-center text-sm font-bold text-forest flex-shrink-0 bg-forest/5">
+    <div class="student-row bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4 shadow-sm hover:shadow-md transition">
+        <div class="student-roll w-11 h-11 rounded-full border-2 border-forest flex items-center justify-center text-sm font-bold text-forest flex-shrink-0 bg-forest/5">
             {{ $student->roll_no }}
         </div>
         <div class="flex-1 min-w-0">
-            <div class="font-semibold text-forest-deep break-words text-[15px]">{{ $student->name }}</div>
-            <div class="text-xs text-ink-soft mt-0.5">
+            <div class="student-name font-semibold text-forest-deep break-words text-[15px]">{{ $student->name }}</div>
+            <div class="student-meta text-xs text-ink-soft mt-0.5">
                 Class {{ $student->class_name }}{{ $student->section }}
                 @if($student->parent_mobile) · {{ $student->parent_mobile }} @else · <span class="text-absent">No phone</span> @endif
             </div>
         </div>
-        <div class="flex gap-4 text-sm font-semibold flex-shrink-0">
+        <div class="student-actions flex gap-4 text-sm font-semibold flex-shrink-0">
             <a href="{{ route('students.edit', $student) }}" class="text-forest hover:underline">Edit</a>
             <a href="{{ route('students.confirm-delete', $student) }}" class="text-absent hover:underline">Delete</a>
         </div>
@@ -70,7 +96,7 @@
 <div class="flex justify-center mt-6">{{ $students->links() }}</div>
 
 @else
-<div class="text-center text-ink-soft py-20 bg-white border border-gray-200 rounded-2xl">
+<div class="student-empty text-center text-ink-soft py-20 bg-white border border-gray-200 rounded-2xl">
     <div class="text-lg font-medium mb-1">No students found</div>
     <div class="text-sm">Try changing the class or search term.</div>
 </div>
