@@ -104,7 +104,7 @@
         .status-warning{color:var(--ui-warning);background:var(--ui-warning-bg)}
         .status-danger{color:var(--ui-danger);background:var(--ui-danger-bg)}
         .status-info{color:var(--ui-info);background:var(--ui-info-bg)}
-        .developer-credit{flex-shrink:0;background:var(--ui-forest)!important;border-top:1px solid rgba(232,197,106,.35);color:#fff!important}
+        .developer-credit{flex-shrink:0;background:var(--ui-forest)!important;border-top:1px solid rgba(232,197,106,.35);color:#fff!important;font-family:'Special Elite',monospace!important;letter-spacing:.02em}.developer-credit a{font-family:'Special Elite',monospace!important}
         @media(max-width:640px){button:not(.nav-btn),input[type="submit"],input[type="button"],a[role="button"]{min-height:38px}table{font-size:12px}table th,table td{padding:8px 9px}}
         @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important}}
 
