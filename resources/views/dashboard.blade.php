@@ -5,12 +5,12 @@
 @section('content')
 
 <style>
-/* Keep Quick Access close to the original card size, with a modest reduction */
-.dashboard-quick-access-grid > a{min-height:94px!important;padding:14px 15px!important}
-.dashboard-quick-access-grid > a h2{font-size:14px!important;line-height:1.3!important}
-.dashboard-quick-access-grid > a p{margin-top:6px!important;font-size:12px!important;line-height:1.35!important}
+/* Slightly larger Quick Access cards for comfortable reading and tapping */
+.dashboard-quick-access-grid > a{min-height:104px!important;padding:16px 17px!important}
+.dashboard-quick-access-grid > a h2{font-size:15px!important;line-height:1.35!important}
+.dashboard-quick-access-grid > a p{margin-top:7px!important;font-size:12.5px!important;line-height:1.4!important}
 @media(max-width:767px){
-  .dashboard-quick-access-grid > a{min-height:88px!important;padding:12px 13px!important}
+  .dashboard-quick-access-grid > a{min-height:96px!important;padding:14px 15px!important}
 }
 </style>
 
