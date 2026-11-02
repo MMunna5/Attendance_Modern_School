@@ -12,6 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -181,6 +182,12 @@ html body select optgroup {
     font-weight: 500;
 }
 
+
+        /* Match the school-name typography used on the login page */
+        .school-brand-name{
+            font-family:'Special Elite',monospace!important;
+            font-weight:400!important;
+        }
 </style>
 
     @stack('styles')
@@ -204,7 +211,7 @@ html body select optgroup {
 
                 <div class="flex-1 min-w-0 flex items-center justify-center gap-2 px-1 sm:px-2">
                     <img src="/images/logo.jpeg" alt="School Logo" class="h-8 sm:h-10 w-8 sm:w-10 rounded-full flex-shrink-0 object-cover">
-                    <div class="font-extrabold text-[13px] sm:text-base md:text-lg lg:text-xl tracking-wider drop-shadow-md truncate">
+                    <div class="school-brand-name font-display text-[13px] sm:text-base md:text-lg lg:text-xl tracking-wider drop-shadow-md truncate">
                         {{ config('school.full_name') }}
                     </div>
                 </div>
