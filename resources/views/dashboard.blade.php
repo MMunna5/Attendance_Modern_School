@@ -5,12 +5,13 @@
 @section('content')
 
 <style>
-<!-- Compact Quick Access cards to reduce dashboard vertical height -->
-@media(min-width:768px){
-  .dashboard-quick-access-grid > a{min-height:76px!important;padding:11px 12px!important}
+/* Keep Quick Access close to the original card size, with a modest reduction */
+.dashboard-quick-access-grid > a{min-height:94px!important;padding:14px 15px!important}
+.dashboard-quick-access-grid > a h2{font-size:14px!important;line-height:1.3!important}
+.dashboard-quick-access-grid > a p{margin-top:6px!important;font-size:12px!important;line-height:1.35!important}
+@media(max-width:767px){
+  .dashboard-quick-access-grid > a{min-height:88px!important;padding:12px 13px!important}
 }
-.dashboard-quick-access-grid > a h2{font-size:13px!important;line-height:1.25!important}
-.dashboard-quick-access-grid > a p{margin-top:5px!important;font-size:11px!important;line-height:1.3!important}
 </style>
 
 
