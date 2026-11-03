@@ -4,18 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login - Attendance Register</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: { extend: {
-                colors: { paper: '#F7F4EC', forest: '#1E3D32', 'forest-deep': '#14291F', gold: '#C9982E', ink: '#2B3A67', 'ink-soft': '#6B7594' },
-                fontFamily: { display: ['"Special Elite"', 'monospace'], sans: ['"Noto Sans"', 'sans-serif'] }
-            }}
-        }
-    </script>
     <style>
+        .font-display { font-family: 'Special Elite', monospace !important; }
+        .text-gold { color: #C9982E !important; }
         body { font-family: 'Noto Sans', sans-serif; }
         .back-btn { display: inline-flex; align-items: center; gap: .35rem; padding: .45rem .9rem; border-radius: .6rem; font-size: .8125rem; font-weight: 600; background: #1E3D32; border: 1px solid #1E3D32; color: #fff; cursor: pointer; transition: background .15s, border-color .15s; }
         .back-btn:hover { background: #14291F; border-color: #14291F; }
