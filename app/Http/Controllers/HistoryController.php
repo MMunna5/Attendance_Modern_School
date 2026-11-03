@@ -66,8 +66,10 @@ class HistoryController extends Controller
                 $students = Student::withoutGlobalScopes()->where('class_name', $classFilter)
                     ->when($rollFilter, fn ($q) => $q->where('roll_no', 'like', "%{$rollFilter}%"))
                     ->orderBy('section')->orderBy('roll_no')->get();
+                $monthStart = sprintf('%04d-%02d-01', $year, $month);
+                $nextMonthStart = date('Y-m-d', strtotime($monthStart . ' +1 month'));
                 $monthlyCounts = Attendance::whereIn('student_id', $students->pluck('id'))
-                    ->whereYear('date', $year)->whereMonth('date', $month)
+                    ->where('date', '>=', $monthStart)->where('date', '<', $nextMonthStart)
                     ->selectRaw('student_id, SUM(CASE WHEN is_present = 1 THEN 1 ELSE 0 END) as present_count, SUM(CASE WHEN is_present = 0 THEN 1 ELSE 0 END) as absent_count')
                     ->groupBy('student_id')->get()->keyBy('student_id');
 
@@ -151,8 +153,10 @@ class HistoryController extends Controller
 
         if ($viewMode === 'month') {
             [$year, $month, $monthStr] = $this->monthBounds($request->query('month'));
+            $monthStart = sprintf('%04d-%02d-01', $year, $month);
+            $nextMonthStart = date('Y-m-d', strtotime($monthStart . ' +1 month'));
             $monthlyCounts = Attendance::whereIn('student_id', $students->pluck('id'))
-                ->whereYear('date', $year)->whereMonth('date', $month)
+                ->where('date', '>=', $monthStart)->where('date', '<', $nextMonthStart)
                 ->selectRaw('student_id, SUM(CASE WHEN is_present = 1 THEN 1 ELSE 0 END) as present_count, SUM(CASE WHEN is_present = 0 THEN 1 ELSE 0 END) as absent_count')
                 ->groupBy('student_id')->get()->keyBy('student_id');
 
