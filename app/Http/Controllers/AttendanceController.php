@@ -159,7 +159,6 @@ class AttendanceController extends Controller
 
         if ($canSubmit) {
             $students = $this->loadStudents($currentClass, $isAdminUser)->all();
-            $expectedTotal = count($students);
             $absentStudents = [];
 
             DB::transaction(function () use ($request, $students, $currentClass, $today, &$absentStudents) {
