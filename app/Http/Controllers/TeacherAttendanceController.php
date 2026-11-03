@@ -64,21 +64,35 @@ class TeacherAttendanceController extends Controller
 
                 if (!$alreadyMarked) {
                     $sectionTeachers = Teacher::where('employment_type', $employmentType)->orderBy('id')->get();
+                    $attendanceRows = [];
+                    $absentTeachers = [];
+                    $timestamp = now();
+
                     foreach ($sectionTeachers as $teacher) {
                         $status = $request->input("tatt_{$teacher->id}", 'present');
                         $isPresent = $status === 'present';
-
-                        TeacherAttendance::updateOrCreate(
-                            ['teacher_id' => $teacher->id, 'date' => $today],
-                            ['is_present' => $isPresent]
-                        );
+                        $attendanceRows[] = [
+                            'teacher_id' => $teacher->id,
+                            'date' => $today,
+                            'is_present' => $isPresent,
+                            'created_at' => $timestamp,
+                            'updated_at' => $timestamp,
+                        ];
 
                         if (!$isPresent) {
-                            $sms = TeacherAbsenceSms::firstOrCreate(['teacher_id' => $teacher->id, 'date' => $today]);
-                            if ($sms->wasRecentlyCreated) {
-                                SendTeacherAbsenceSms::dispatch($sms->id);
-                                $smsQueuedCount++;
-                            }
+                            $absentTeachers[] = $teacher;
+                        }
+                    }
+
+                    if ($attendanceRows) {
+                        TeacherAttendance::insertOrIgnore($attendanceRows);
+                    }
+
+                    foreach ($absentTeachers as $teacher) {
+                        $sms = TeacherAbsenceSms::firstOrCreate(['teacher_id' => $teacher->id, 'date' => $today]);
+                        if ($sms->wasRecentlyCreated) {
+                            SendTeacherAbsenceSms::dispatch($sms->id);
+                            $smsQueuedCount++;
                         }
                     }
                 }
