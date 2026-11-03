@@ -3,7 +3,6 @@
 @section('header_title', 'Upload Students (Excel)')
 
 @section('content')
-    <a href="{{ route('students.index') }}" class="text-sm text-forest font-semibold hover:underline">← Back to Student List</a>
     <p class="text-sm text-ink-soft">
         Upload one or more <code>.xlsx</code> files. The first row must have these exact columns, in this order:
         <strong>Roll, Name, Class, Section, Session, Phone</strong>.
