@@ -7,35 +7,13 @@
 
     <title>@yield('title', 'Attendance Register')</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        paper: '#F7F4EC',
-                        forest: '#1E3D32',
-                        'forest-deep': '#14291F',
-                        gold: '#E8C56A',
-                        ink: '#2B3A67',
-                        'ink-soft': '#6B7594',
-                        present: '#4C7A5D',
-                        absent: '#B33A3A',
-                    },
-                    fontFamily: {
-                        display: ['"Hind Siliguri"', 'sans-serif'],
-                        sans: ['"Hind Siliguri"', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
 
     <style>
         *, *::before, *::after { box-sizing: border-box; }
