@@ -61,8 +61,8 @@ class SmsStatusController extends Controller
             return redirect()->route('sms-status.index');
         }
 
-        // Aggregate sent, failed and pending records in one query per SMS table.
-        // Half-open ranges preserve the existing month boundaries and allow indexes.
+        // Aggregate sent, failed and pending records in one month-scoped query per SMS table.
+        // The OR conditions keep each status/date range eligible for its matching index.
         [$year, $month, $monthStr] = $this->monthBounds($request->query('month'));
         $monthStart = now('Asia/Dhaka')->setDate($year, $month, 1)->startOfDay();
         $nextMonthStart = $monthStart->copy()->addMonth();
@@ -71,6 +71,21 @@ class SmsStatusController extends Controller
         $nextDateStart = $nextMonthStart->toDateString();
 
         $studentStats = AbsenceSms::query()
+            ->where(function ($query) use ($monthStart, $nextMonthStart, $dateStart, $nextDateStart) {
+                $query->where(function ($sent) use ($monthStart, $nextMonthStart) {
+                    $sent->where('status', AbsenceSms::STATUS_SENT)
+                        ->where('sent_at', '>=', $monthStart)
+                        ->where('sent_at', '<', $nextMonthStart);
+                })->orWhere(function ($failed) use ($dateStart, $nextDateStart) {
+                    $failed->where('status', AbsenceSms::STATUS_FAILED)
+                        ->where('date', '>=', $dateStart)
+                        ->where('date', '<', $nextDateStart);
+                })->orWhere(function ($pending) use ($dateStart, $nextDateStart) {
+                    $pending->where('status', AbsenceSms::STATUS_PENDING)
+                        ->where('date', '>=', $dateStart)
+                        ->where('date', '<', $nextDateStart);
+                });
+            })
             ->selectRaw(
                 'COALESCE(SUM(CASE WHEN status = ? AND sent_at >= ? AND sent_at < ? THEN 1 ELSE 0 END), 0) as sent,
                  COALESCE(SUM(CASE WHEN status = ? AND sent_at >= ? AND sent_at < ? THEN sms_segments ELSE 0 END), 0) as segments,
@@ -86,6 +101,21 @@ class SmsStatusController extends Controller
             ->first();
 
         $teacherStats = TeacherAbsenceSms::query()
+            ->where(function ($query) use ($monthStart, $nextMonthStart, $dateStart, $nextDateStart) {
+                $query->where(function ($sent) use ($monthStart, $nextMonthStart) {
+                    $sent->where('status', TeacherAbsenceSms::STATUS_SENT)
+                        ->where('sent_at', '>=', $monthStart)
+                        ->where('sent_at', '<', $nextMonthStart);
+                })->orWhere(function ($failed) use ($dateStart, $nextDateStart) {
+                    $failed->where('status', TeacherAbsenceSms::STATUS_FAILED)
+                        ->where('date', '>=', $dateStart)
+                        ->where('date', '<', $nextDateStart);
+                })->orWhere(function ($pending) use ($dateStart, $nextDateStart) {
+                    $pending->where('status', TeacherAbsenceSms::STATUS_PENDING)
+                        ->where('date', '>=', $dateStart)
+                        ->where('date', '<', $nextDateStart);
+                });
+            })
             ->selectRaw(
                 'COALESCE(SUM(CASE WHEN status = ? AND sent_at >= ? AND sent_at < ? THEN 1 ELSE 0 END), 0) as sent,
                  COALESCE(SUM(CASE WHEN status = ? AND sent_at >= ? AND sent_at < ? THEN sms_segments ELSE 0 END), 0) as segments,
