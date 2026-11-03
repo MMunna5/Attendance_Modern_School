@@ -171,18 +171,51 @@ class AttendanceController extends Controller
                     ->get()
                     ->keyBy('student_id');
 
+                $rowsToCreate = [];
+                $rowsToUpdate = [];
+                $timestamp = now();
+
                 foreach ($students as $student) {
                     $status = $request->input("att_{$student->id}", 'present');
                     $isPresent = $status === 'present';
+                    $existingAttendance = $existing->get($student->id);
 
-                    Attendance::updateOrCreate(
-                        ['student_id' => $student->id, 'date' => $today],
-                        ['is_present' => $isPresent]
-                    );
+                    if ($existingAttendance) {
+                        if ((bool) $existingAttendance->is_present !== $isPresent) {
+                            $rowsToUpdate[(int) $student->id] = $isPresent;
+                        }
+                    } else {
+                        $rowsToCreate[] = [
+                            'student_id' => $student->id,
+                            'date' => $today,
+                            'is_present' => $isPresent,
+                            'created_at' => $timestamp,
+                            'updated_at' => $timestamp,
+                        ];
+                    }
 
                     if (!$isPresent) {
                         $absentStudents[] = $student;
                     }
+                }
+
+                if ($rowsToCreate) {
+                    Attendance::insert($rowsToCreate);
+                }
+
+                if ($rowsToUpdate) {
+                    $cases = [];
+                    foreach ($rowsToUpdate as $studentId => $isPresent) {
+                        $cases[] = 'WHEN ' . (int) $studentId . ' THEN ' . ($isPresent ? '1' : '0');
+                    }
+
+                    DB::table('attendances')
+                        ->where('date', $today)
+                        ->whereIn('student_id', array_keys($rowsToUpdate))
+                        ->update([
+                            'is_present' => DB::raw('CASE student_id ' . implode(' ', $cases) . ' ELSE is_present END'),
+                            'updated_at' => $timestamp,
+                        ]);
                 }
             });
 
