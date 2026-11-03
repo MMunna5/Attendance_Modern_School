@@ -196,11 +196,23 @@ class HistoryController extends Controller
     {
         [$year, $month, $monthStr] = $this->monthBounds($request->query('month'));
 
-        $buildRecords = function ($teachers) use ($year, $month) {
-            return $teachers->map(function ($teacher) use ($year, $month) {
-                $present = TeacherAttendance::where('teacher_id', $teacher->id)->whereYear('date', $year)->whereMonth('date', $month)->where('is_present', true)->count();
-                $absent = TeacherAttendance::where('teacher_id', $teacher->id)->whereYear('date', $year)->whereMonth('date', $month)->where('is_present', false)->count();
-                return ['teacher' => $teacher, 'present' => $present, 'absent' => $absent];
+        // Fetch all monthly attendance totals in one grouped query instead of
+        // running two COUNT queries for every teacher (N+1 query pattern).
+        $attendanceCounts = TeacherAttendance::selectRaw('teacher_id, is_present, COUNT(*) as total')
+            ->whereYear('date', $year)
+            ->whereMonth('date', $month)
+            ->groupBy('teacher_id', 'is_present')
+            ->get()
+            ->groupBy('teacher_id');
+
+        $buildRecords = function ($teachers) use ($attendanceCounts) {
+            return $teachers->map(function ($teacher) use ($attendanceCounts) {
+                $counts = $attendanceCounts->get($teacher->id, collect());
+                return [
+                    'teacher' => $teacher,
+                    'present' => (int) $counts->firstWhere('is_present', true)?->total,
+                    'absent' => (int) $counts->firstWhere('is_present', false)?->total,
+                ];
             })->values();
         };
 
