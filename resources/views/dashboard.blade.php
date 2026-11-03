@@ -58,6 +58,15 @@
 .dashboard-quick-access-grid>a{box-shadow:0 3px 9px rgba(20,35,55,.13)!important}
 .dashboard-quick-access-grid>a:hover{filter:brightness(1.08)}
 
+
+/* Final contrast override: force all Quick Access card text and icons to white */
+.dashboard-quick-access-grid>a,
+.dashboard-quick-access-grid>a *,
+.dashboard-quick-access-grid>a h2,
+.dashboard-quick-access-grid>a p,
+.dashboard-quick-access-grid>a span{color:#fff!important}
+.dashboard-quick-access-grid>a svg{color:#fff!important;stroke:currentColor!important}
+
 </style>
 
 
