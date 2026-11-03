@@ -79,9 +79,12 @@
         button,input,select,textarea{font:inherit}
         button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
         button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid rgba(232,197,106,.72);outline-offset:2px}
-        button:not(.nav-btn),input[type="submit"],input[type="button"],a[role="button"]{min-height:40px;border-radius:9px;font-weight:600;letter-spacing:.005em;transition:background-color .16s ease,border-color .16s ease,color .16s ease,box-shadow .16s ease,transform .16s ease}
+        button:not(:disabled),input[type="submit"]:not(:disabled),input[type="button"]:not(:disabled),a[role="button"],.nav-btn,main a[class*="rounded"][class*="px-"]{cursor:pointer;transition:transform .16s ease,box-shadow .16s ease,background-color .16s ease,border-color .16s ease,color .16s ease,filter .16s ease}
         button:not(.nav-btn):not([class*="bg-"]),input[type="submit"]:not([class*="bg-"]),input[type="button"]:not([class*="bg-"]){padding:9px 15px;color:#fff;background:var(--ui-forest);border:1px solid var(--ui-forest)}
-        button:not(.nav-btn):hover,input[type="submit"]:hover,input[type="button"]:hover,a[role="button"]:hover{box-shadow:0 3px 9px rgba(30,61,50,.14)}
+        button:not(:disabled):hover,input[type="submit"]:not(:disabled):hover,input[type="button"]:not(:disabled):hover,a[role="button"]:hover,main a[class*="rounded"][class*="px-"]:hover{transform:translateY(-1px);box-shadow:0 5px 13px rgba(30,61,50,.16);filter:brightness(.97)}
+        .nav-btn:hover{transform:translateY(-1px);box-shadow:0 3px 9px rgba(0,0,0,.16)}
+        button:active:not(:disabled),input[type="submit"]:active:not(:disabled),input[type="button"]:active:not(:disabled),a[role="button"]:active{transform:translateY(0);box-shadow:0 1px 3px rgba(30,61,50,.12)}
+        @media(prefers-reduced-motion:reduce){button,input[type="submit"],input[type="button"],a[role="button"],.nav-btn{transition:none!important}button:hover,input[type="submit"]:hover,input[type="button"]:hover,a[role="button"]:hover,.nav-btn:hover{transform:none!important}}
         button:disabled,input:disabled,select:disabled,textarea:disabled{cursor:not-allowed;opacity:.58}
         input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="hidden"]),select,textarea{min-height:40px;border:1px solid #D6DFD8;border-radius:9px;background-color:#fff;color:var(--ui-ink);padding:9px 11px;transition:border-color .16s ease,box-shadow .16s ease}
         textarea{min-height:92px}
@@ -217,13 +220,14 @@ html body select optgroup {
                 </div>
 
                 <nav class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-                    <!-- Always-visible Dashboard shortcut, independent of page-specific header links -->
+                    @unless(request()->routeIs('dashboard'))
                     <a href="{{ route('dashboard') }}" class="nav-btn" aria-label="Back to Dashboard">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" class="w-3.5 h-3.5 sm:w-4 sm:h-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 011 1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 10.5 12 3l9 7.5M5.5 9v11h13V9M9 20v-6h6v6" />
                         </svg>
                         <span>Dashboard</span>
                     </a>
+                    @endunless
                     @hasSection('header_links')
                         @yield('header_links')
                     @else
