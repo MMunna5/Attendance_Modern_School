@@ -25,19 +25,24 @@ class DashboardController extends Controller
             $students = Student::whereIn('class_name', $teacherClasses)->withoutGlobalScopes();
             $totalStudents = $students->count();
 
-            $attendanceToday = Attendance::whereHas('student', function ($q) use ($teacherClasses) {
+            $attendanceTotals = Attendance::whereHas('student', function ($q) use ($teacherClasses) {
                 $q->whereIn('class_name', $teacherClasses);
-            })->where('date', $today);
+            })->where('date', $today)
+                ->selectRaw('SUM(CASE WHEN is_present = 1 THEN 1 ELSE 0 END) as present_count, SUM(CASE WHEN is_present = 0 THEN 1 ELSE 0 END) as absent_count')
+                ->first();
 
-            $presentCount = (clone $attendanceToday)->where('is_present', true)->count();
-            $absentCount = (clone $attendanceToday)->where('is_present', false)->count();
+            $presentCount = (int) ($attendanceTotals->present_count ?? 0);
+            $absentCount = (int) ($attendanceTotals->absent_count ?? 0);
         }
 
         $adminPresent = $adminAbsent = $adminTotal = 0;
         if ($user->is_admin) {
-            $allToday = Attendance::where('date', $today);
-            $adminPresent = (clone $allToday)->where('is_present', true)->count();
-            $adminAbsent = (clone $allToday)->where('is_present', false)->count();
+            $adminTotals = Attendance::where('date', $today)
+                ->selectRaw('SUM(CASE WHEN is_present = 1 THEN 1 ELSE 0 END) as present_count, SUM(CASE WHEN is_present = 0 THEN 1 ELSE 0 END) as absent_count')
+                ->first();
+
+            $adminPresent = (int) ($adminTotals->present_count ?? 0);
+            $adminAbsent = (int) ($adminTotals->absent_count ?? 0);
             $adminTotal = Student::withoutGlobalScopes()->count();
         }
 
