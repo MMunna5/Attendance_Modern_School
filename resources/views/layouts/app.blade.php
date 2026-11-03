@@ -220,7 +220,7 @@ html body select optgroup {
                     <!-- Always-visible Dashboard shortcut, independent of page-specific header links -->
                     <a href="{{ route('dashboard') }}" class="nav-btn" aria-label="Back to Dashboard">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" class="w-3.5 h-3.5 sm:w-4 sm:h-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 011 1h2v4a1 1 0 01-1 1h-2z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 011 1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z" />
                         </svg>
                         <span>Dashboard</span>
                     </a>
