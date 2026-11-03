@@ -2,13 +2,6 @@
 @section('title', 'SMS Status - Attendance Register')
 @section('header_title', 'SMS Delivery Status')
 
-@section('header_links')
-<form method="post" action="{{ route('logout') }}" class="inline">
-    @csrf
-    <button type="submit" class="nav-btn nav-btn-danger">Log Out</button>
-</form>
-@endsection
-
 @section('content')
 
 <div class="bg-forest-deep text-white rounded-2xl p-6 mb-5 shadow-md">
