@@ -56,7 +56,7 @@
 </div>
 
 <div class="text-sm text-ink-soft mb-5">
-    Failed messages show the provider error and can be retried. Pending messages are waiting for the queue worker. Showing up to 200 messages in each list.
+    Failed messages show the provider error and can be retried. Pending messages are waiting for the queue worker. Showing the latest 50 messages in each list.
 </div>
 
 @foreach([['Student — Failed', $studentFailed, 'student'], ['Student — Pending', $studentPending, 'student'], ['Teacher — Failed', $teacherFailed, 'teacher'], ['Teacher — Pending', $teacherPending, 'teacher']] as [$label, $list, $kind])
