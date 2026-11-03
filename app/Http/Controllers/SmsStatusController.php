@@ -1,13 +1,13 @@
 <?php
 
-namespace App\\Http\\Controllers;
+namespace App\Http\Controllers;
 
-use App\\Models\\AbsenceSms;
-use App\\Models\\TeacherAbsenceSms;
-use App\\Models\\EmergencySmsLog;
-use App\\Jobs\\SendAbsenceSms;
-use App\\Jobs\\SendTeacherAbsenceSms;
-use Illuminate\\Http\\Request;
+use App\Models\AbsenceSms;
+use App\Models\TeacherAbsenceSms;
+use App\Models\EmergencySmsLog;
+use App\Jobs\SendAbsenceSms;
+use App\Jobs\SendTeacherAbsenceSms;
+use Illuminate\Http\Request;
 
 class SmsStatusController extends Controller
 {
@@ -138,7 +138,7 @@ class SmsStatusController extends Controller
     {
         if (
             $monthStr &&
-            preg_match('/^(\\d{4})-(\\d{1,2})$/', $monthStr, $m) &&
+            preg_match('/^(\d{4})-(\d{1,2})$/', $monthStr, $m) &&
             (int) $m[2] >= 1 &&
             (int) $m[2] <= 12
         ) {
