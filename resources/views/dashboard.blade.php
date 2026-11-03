@@ -18,6 +18,30 @@
 @media(max-width:767px){
   .dashboard-quick-access-grid > a h2{font-size:17px!important;line-height:1.35!important}
 }
+
+/* 12 soft accent colours: three summary counters + nine Quick Access cards */
+.dashboard-summary-grid>div:nth-child(1){background:#eef5ff!important;border-color:#bfd5f4!important}
+.dashboard-summary-grid>div:nth-child(2){background:#eaf8f1!important;border-color:#b8e2cb!important}
+.dashboard-summary-grid>div:nth-child(3){background:#fff0f0!important;border-color:#f1c2c2!important}
+.dashboard-quick-access-grid>a:nth-child(1){background:#edf5ff!important;border-color:#b9d5f5!important}
+.dashboard-quick-access-grid>a:nth-child(1) h2{color:#245b9b!important}
+.dashboard-quick-access-grid>a:nth-child(2){background:#eaf8f8!important;border-color:#b5e1df!important}
+.dashboard-quick-access-grid>a:nth-child(2) h2{color:#176b68!important}
+.dashboard-quick-access-grid>a:nth-child(3){background:#f3efff!important;border-color:#d2c5f2!important}
+.dashboard-quick-access-grid>a:nth-child(3) h2{color:#5a4398!important}
+.dashboard-quick-access-grid>a:nth-child(4){background:#edf8ef!important;border-color:#bfdfc4!important}
+.dashboard-quick-access-grid>a:nth-child(4) h2{color:#28643b!important}
+.dashboard-quick-access-grid>a:nth-child(5){background:#eaf7f5!important;border-color:#b8ded6!important}
+.dashboard-quick-access-grid>a:nth-child(5) h2{color:#21675b!important}
+.dashboard-quick-access-grid>a:nth-child(6){background:#fff6e9!important;border-color:#eed8b2!important}
+.dashboard-quick-access-grid>a:nth-child(6) h2{color:#80551c!important}
+.dashboard-quick-access-grid>a:nth-child(7){background:#fff0f3!important;border-color:#f0c4cf!important}
+.dashboard-quick-access-grid>a:nth-child(7) h2{color:#91445a!important}
+.dashboard-quick-access-grid>a:nth-child(8){background:#edf7ff!important;border-color:#bfdcf1!important}
+.dashboard-quick-access-grid>a:nth-child(8) h2{color:#28628a!important}
+.dashboard-quick-access-grid>a:nth-child(9){background:#f2f3f7!important;border-color:#d0d5e0!important}
+.dashboard-quick-access-grid>a:nth-child(9) h2{color:#4b5874!important}
+
 </style>
 
 
@@ -83,7 +107,7 @@
 @if(auth()->user()->is_admin)
 <div class="font-display text-[11px] tracking-widest uppercase text-ink-soft mt-6 mb-3">Today · All Classes</div>
 
-<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+<div class="dashboard-summary-grid grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
     <div class="bg-white border border-gray-200 rounded-2xl px-4 py-4 text-center shadow-sm">
         <div class="text-[11px] uppercase tracking-widest text-ink-soft">Students</div>
         <div class="text-2xl font-bold text-forest-deep mt-1">{{ $adminTotal }}</div>
