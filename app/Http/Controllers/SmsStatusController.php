@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\\Http\\Controllers;
 
-use App\Models\AbsenceSms;
-use App\Models\TeacherAbsenceSms;
-use App\Models\EmergencySmsLog;
-use App\Jobs\SendAbsenceSms;
-use App\Jobs\SendTeacherAbsenceSms;
-use Illuminate\Http\Request;
+use App\\Models\\AbsenceSms;
+use App\\Models\\TeacherAbsenceSms;
+use App\\Models\\EmergencySmsLog;
+use App\\Jobs\\SendAbsenceSms;
+use App\\Jobs\\SendTeacherAbsenceSms;
+use Illuminate\\Http\\Request;
 
 class SmsStatusController extends Controller
 {
     public function index(Request $request)
     {
-        // Retry SMS action
         if ($request->isMethod('post')) {
             $action = $request->input('action');
             $kind = $request->input('kind');
@@ -45,25 +44,15 @@ class SmsStatusController extends Controller
                 }
             } elseif ($action === 'retry') {
                 if ($kind === 'student') {
-                    $msg = AbsenceSms::find($id);
-
+                    $msg = AbsenceSms::where('status', AbsenceSms::STATUS_FAILED)->find($id);
                     if ($msg) {
-                        $msg->update([
-                            'status' => AbsenceSms::STATUS_PENDING,
-                            'next_attempt_at' => null,
-                        ]);
-
+                        $msg->update(['status' => AbsenceSms::STATUS_PENDING, 'next_attempt_at' => null]);
                         SendAbsenceSms::dispatch($msg->id);
                     }
-                } else {
-                    $msg = TeacherAbsenceSms::find($id);
-
+                } elseif ($kind === 'teacher') {
+                    $msg = TeacherAbsenceSms::where('status', TeacherAbsenceSms::STATUS_FAILED)->find($id);
                     if ($msg) {
-                        $msg->update([
-                            'status' => TeacherAbsenceSms::STATUS_PENDING,
-                            'next_attempt_at' => null,
-                        ]);
-
+                        $msg->update(['status' => TeacherAbsenceSms::STATUS_PENDING, 'next_attempt_at' => null]);
                         SendTeacherAbsenceSms::dispatch($msg->id);
                     }
                 }
@@ -72,39 +61,49 @@ class SmsStatusController extends Controller
             return redirect()->route('sms-status.index');
         }
 
-        // Bill only messages confirmed as sent, using the actual send timestamp.
+        // Use a half-open date range so database indexes on sent_at/date can help.
         [$year, $month, $monthStr] = $this->monthBounds($request->query('month'));
+        $monthStart = now('Asia/Dhaka')->setDate($year, $month, 1)->startOfDay();
+        $nextMonthStart = $monthStart->copy()->addMonth();
 
-        $studentSent = AbsenceSms::whereYear('sent_at', $year)
-            ->whereMonth('sent_at', $month)
-            ->where('status', AbsenceSms::STATUS_SENT);
-        $teacherSent = TeacherAbsenceSms::whereYear('sent_at', $year)
-            ->whereMonth('sent_at', $month)
-            ->where('status', TeacherAbsenceSms::STATUS_SENT);
-        $emergencySent = EmergencySmsLog::whereYear('sent_at', $year)
-            ->whereMonth('sent_at', $month)
-            ->whereNotNull('sent_at');
+        $studentStats = AbsenceSms::where('status', AbsenceSms::STATUS_SENT)
+            ->where('sent_at', '>=', $monthStart)
+            ->where('sent_at', '<', $nextMonthStart)
+            ->selectRaw('COUNT(*) as sent, COALESCE(SUM(sms_segments), 0) as segments')
+            ->first();
+        $teacherStats = TeacherAbsenceSms::where('status', TeacherAbsenceSms::STATUS_SENT)
+            ->where('sent_at', '>=', $monthStart)
+            ->where('sent_at', '<', $nextMonthStart)
+            ->selectRaw('COUNT(*) as sent, COALESCE(SUM(sms_segments), 0) as segments')
+            ->first();
+        $emergencyStats = EmergencySmsLog::where('sent_at', '>=', $monthStart)
+            ->where('sent_at', '<', $nextMonthStart)
+            ->selectRaw('COUNT(*) as sent, COALESCE(SUM(sms_segments), 0) as segments')
+            ->first();
+
+        $dateStart = $monthStart->toDateString();
+        $nextDateStart = $nextMonthStart->toDateString();
 
         $counts = [
             'student' => [
-                'segments' => (clone $studentSent)->sum('sms_segments'),
-                'sent' => (clone $studentSent)->count(),
-                'failed' => AbsenceSms::whereYear('date', $year)->whereMonth('date', $month)
-                    ->where('status', AbsenceSms::STATUS_FAILED)->count(),
-                'pending' => AbsenceSms::whereYear('date', $year)->whereMonth('date', $month)
-                    ->where('status', AbsenceSms::STATUS_PENDING)->count(),
+                'segments' => (int) $studentStats->segments,
+                'sent' => (int) $studentStats->sent,
+                'failed' => AbsenceSms::where('status', AbsenceSms::STATUS_FAILED)
+                    ->where('date', '>=', $dateStart)->where('date', '<', $nextDateStart)->count(),
+                'pending' => AbsenceSms::where('status', AbsenceSms::STATUS_PENDING)
+                    ->where('date', '>=', $dateStart)->where('date', '<', $nextDateStart)->count(),
             ],
             'teacher' => [
-                'segments' => (clone $teacherSent)->sum('sms_segments'),
-                'sent' => (clone $teacherSent)->count(),
-                'failed' => TeacherAbsenceSms::whereYear('date', $year)->whereMonth('date', $month)
-                    ->where('status', TeacherAbsenceSms::STATUS_FAILED)->count(),
-                'pending' => TeacherAbsenceSms::whereYear('date', $year)->whereMonth('date', $month)
-                    ->where('status', TeacherAbsenceSms::STATUS_PENDING)->count(),
+                'segments' => (int) $teacherStats->segments,
+                'sent' => (int) $teacherStats->sent,
+                'failed' => TeacherAbsenceSms::where('status', TeacherAbsenceSms::STATUS_FAILED)
+                    ->where('date', '>=', $dateStart)->where('date', '<', $nextDateStart)->count(),
+                'pending' => TeacherAbsenceSms::where('status', TeacherAbsenceSms::STATUS_PENDING)
+                    ->where('date', '>=', $dateStart)->where('date', '<', $nextDateStart)->count(),
             ],
             'emergency' => [
-                'segments' => (clone $emergencySent)->sum('sms_segments'),
-                'sent' => (clone $emergencySent)->count(),
+                'segments' => (int) $emergencyStats->segments,
+                'sent' => (int) $emergencyStats->sent,
             ],
         ];
 
@@ -118,16 +117,16 @@ class SmsStatusController extends Controller
         return view('sms.status', [
             'studentFailed' => AbsenceSms::with('student')
                 ->where('status', AbsenceSms::STATUS_FAILED)
-                ->orderByDesc('created_at')->limit(200)->get(),
+                ->orderByDesc('created_at')->limit(50)->get(),
             'studentPending' => AbsenceSms::with('student')
                 ->where('status', AbsenceSms::STATUS_PENDING)
-                ->orderBy('created_at')->limit(200)->get(),
+                ->orderByDesc('created_at')->limit(50)->get(),
             'teacherFailed' => TeacherAbsenceSms::with('teacher')
                 ->where('status', TeacherAbsenceSms::STATUS_FAILED)
-                ->orderByDesc('created_at')->limit(200)->get(),
+                ->orderByDesc('created_at')->limit(50)->get(),
             'teacherPending' => TeacherAbsenceSms::with('teacher')
                 ->where('status', TeacherAbsenceSms::STATUS_PENDING)
-                ->orderBy('created_at')->limit(200)->get(),
+                ->orderByDesc('created_at')->limit(50)->get(),
             'monthStr' => $monthStr,
             'counts' => $counts,
             'totalSegments' => $totalSegments,
@@ -135,14 +134,11 @@ class SmsStatusController extends Controller
         ]);
     }
 
-    /**
-     * Get the selected year and month.
-     */
     private function monthBounds(?string $monthStr): array
     {
         if (
             $monthStr &&
-            preg_match('/^(\d{4})-(\d{1,2})$/', $monthStr, $m) &&
+            preg_match('/^(\\d{4})-(\\d{1,2})$/', $monthStr, $m) &&
             (int) $m[2] >= 1 &&
             (int) $m[2] <= 12
         ) {
