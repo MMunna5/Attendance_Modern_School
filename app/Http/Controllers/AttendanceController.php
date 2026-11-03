@@ -206,7 +206,7 @@ class AttendanceController extends Controller
                 if ($rowsToUpdate) {
                     $cases = [];
                     foreach ($rowsToUpdate as $studentId => $isPresent) {
-                        $cases[] = 'WHEN ' . (int) $studentId . ' THEN ' . ($isPresent ? '1' : '0');
+                        $cases[] = 'WHEN ' . (int) $studentId . ' THEN ' . ($isPresent ? 'TRUE' : 'FALSE');
                     }
 
                     DB::table('attendances')
