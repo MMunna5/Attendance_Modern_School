@@ -228,25 +228,16 @@ html body select optgroup {
                         <span>Dashboard</span>
                     </a>
                     @endunless
+                    @if(request()->routeIs('dashboard'))
+                    <a href="{{ route('change-password.show') }}" class="nav-btn" aria-label="Change Password"><span>Password</span></a>
+                    @endif
                     @hasSection('header_links')
                         @yield('header_links')
-                    @else
-                        <a href="{{ route('change-password.show') }}" class="nav-btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" class="w-3.5 h-3.5 sm:w-4 sm:h-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-                            </svg>
-                            <span>Password</span>
-                        </a>
-                        <form method="post" action="{{ route('logout') }}" class="inline">
-                            @csrf
-                            <button type="submit" class="nav-btn nav-btn-danger">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" class="w-3.5 h-3.5 sm:w-4 sm:h-4">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                </svg>
-                                <span>Log Out</span>
-                            </button>
-                        </form>
                     @endif
+                    <form method="post" action="{{ route('logout') }}" class="inline">
+                        @csrf
+                        <button type="submit" class="nav-btn nav-btn-danger"><span>Log Out</span></button>
+                    </form>
                 </nav>
 
             </div>
