@@ -5,9 +5,8 @@
 @section('content')
 
 <style>
-/* Slightly larger Quick Access cards for comfortable reading and tapping */
+/* Quick Access card sizing */
 .dashboard-quick-access-grid > a{min-height:124px!important;padding:20px 21px!important}
-.dashboard-quick-access-grid > a h2{font-size:15px!important;line-height:1.35!important}
 .dashboard-quick-access-grid > a p{margin-top:7px!important;font-size:12.5px!important;line-height:1.4!important}
 @media(max-width:767px){
   .dashboard-quick-access-grid > a{min-height:114px!important;padding:18px 19px!important}
@@ -19,29 +18,10 @@
   .dashboard-quick-access-grid > a h2{font-size:17px!important;line-height:1.35!important}
 }
 
-/* 12 soft accent colours: three summary counters + nine Quick Access cards */
+/* Summary counter accents; Quick Access cards use the deep palette below */
 .dashboard-summary-grid>div:nth-child(1){background:#eef5ff!important;border-color:#bfd5f4!important}
 .dashboard-summary-grid>div:nth-child(2){background:#eaf8f1!important;border-color:#b8e2cb!important}
 .dashboard-summary-grid>div:nth-child(3){background:#fff0f0!important;border-color:#f1c2c2!important}
-.dashboard-quick-access-grid>a:nth-child(1){background:#edf5ff!important;border-color:#b9d5f5!important}
-.dashboard-quick-access-grid>a:nth-child(1) h2{color:#245b9b!important}
-.dashboard-quick-access-grid>a:nth-child(2){background:#eaf8f8!important;border-color:#b5e1df!important}
-.dashboard-quick-access-grid>a:nth-child(2) h2{color:#176b68!important}
-.dashboard-quick-access-grid>a:nth-child(3){background:#f3efff!important;border-color:#d2c5f2!important}
-.dashboard-quick-access-grid>a:nth-child(3) h2{color:#5a4398!important}
-.dashboard-quick-access-grid>a:nth-child(4){background:#edf8ef!important;border-color:#bfdfc4!important}
-.dashboard-quick-access-grid>a:nth-child(4) h2{color:#28643b!important}
-.dashboard-quick-access-grid>a:nth-child(5){background:#eaf7f5!important;border-color:#b8ded6!important}
-.dashboard-quick-access-grid>a:nth-child(5) h2{color:#21675b!important}
-.dashboard-quick-access-grid>a:nth-child(6){background:#fff6e9!important;border-color:#eed8b2!important}
-.dashboard-quick-access-grid>a:nth-child(6) h2{color:#80551c!important}
-.dashboard-quick-access-grid>a:nth-child(7){background:#fff0f3!important;border-color:#f0c4cf!important}
-.dashboard-quick-access-grid>a:nth-child(7) h2{color:#91445a!important}
-.dashboard-quick-access-grid>a:nth-child(8){background:#edf7ff!important;border-color:#bfdcf1!important}
-.dashboard-quick-access-grid>a:nth-child(8) h2{color:#28628a!important}
-.dashboard-quick-access-grid>a:nth-child(9){background:#f2f3f7!important;border-color:#d0d5e0!important}
-.dashboard-quick-access-grid>a:nth-child(9) h2{color:#4b5874!important}
-
 
 /* Deep, distinct Quick Access colours with high-contrast readable text */
 .dashboard-quick-access-grid>a:nth-child(1){background:#245a91!important;border-color:#194875!important}
