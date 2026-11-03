@@ -70,7 +70,7 @@ class HistoryController extends Controller
                 $nextMonthStart = date('Y-m-d', strtotime($monthStart . ' +1 month'));
                 $monthlyCounts = Attendance::whereIn('student_id', $students->pluck('id'))
                     ->where('date', '>=', $monthStart)->where('date', '<', $nextMonthStart)
-                    ->selectRaw('student_id, SUM(CASE WHEN is_present = 1 THEN 1 ELSE 0 END) as present_count, SUM(CASE WHEN is_present = 0 THEN 1 ELSE 0 END) as absent_count')
+                    ->selectRaw('student_id, SUM(CASE WHEN is_present = true THEN 1 ELSE 0 END) as present_count, SUM(CASE WHEN is_present = false THEN 1 ELSE 0 END) as absent_count')
                     ->groupBy('student_id')->get()->keyBy('student_id');
 
                 foreach ($students as $student) {
@@ -157,7 +157,7 @@ class HistoryController extends Controller
             $nextMonthStart = date('Y-m-d', strtotime($monthStart . ' +1 month'));
             $monthlyCounts = Attendance::whereIn('student_id', $students->pluck('id'))
                 ->where('date', '>=', $monthStart)->where('date', '<', $nextMonthStart)
-                ->selectRaw('student_id, SUM(CASE WHEN is_present = 1 THEN 1 ELSE 0 END) as present_count, SUM(CASE WHEN is_present = 0 THEN 1 ELSE 0 END) as absent_count')
+                ->selectRaw('student_id, SUM(CASE WHEN is_present = true THEN 1 ELSE 0 END) as present_count, SUM(CASE WHEN is_present = false THEN 1 ELSE 0 END) as absent_count')
                 ->groupBy('student_id')->get()->keyBy('student_id');
 
             $records = $students->map(function ($student) use ($monthlyCounts) {
