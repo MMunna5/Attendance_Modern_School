@@ -66,9 +66,15 @@ class HistoryController extends Controller
                 $students = Student::withoutGlobalScopes()->where('class_name', $classFilter)
                     ->when($rollFilter, fn ($q) => $q->where('roll_no', 'like', "%{$rollFilter}%"))
                     ->orderBy('section')->orderBy('roll_no')->get();
+                $monthlyCounts = Attendance::whereIn('student_id', $students->pluck('id'))
+                    ->whereYear('date', $year)->whereMonth('date', $month)
+                    ->selectRaw('student_id, SUM(CASE WHEN is_present = 1 THEN 1 ELSE 0 END) as present_count, SUM(CASE WHEN is_present = 0 THEN 1 ELSE 0 END) as absent_count')
+                    ->groupBy('student_id')->get()->keyBy('student_id');
+
                 foreach ($students as $student) {
-                    $present = Attendance::where('student_id', $student->id)->whereYear('date', $year)->whereMonth('date', $month)->where('is_present', true)->count();
-                    $absent = Attendance::where('student_id', $student->id)->whereYear('date', $year)->whereMonth('date', $month)->where('is_present', false)->count();
+                    $counts = $monthlyCounts->get($student->id);
+                    $present = (int) ($counts->present_count ?? 0);
+                    $absent = (int) ($counts->absent_count ?? 0);
                     $records[] = ['student' => $student, 'present' => $present, 'absent' => $absent, 'marked_days' => $present + $absent];
                 }
             }
@@ -145,9 +151,15 @@ class HistoryController extends Controller
 
         if ($viewMode === 'month') {
             [$year, $month, $monthStr] = $this->monthBounds($request->query('month'));
-            $records = $students->map(function ($student) use ($year, $month) {
-                $present = Attendance::where('student_id', $student->id)->whereYear('date', $year)->whereMonth('date', $month)->where('is_present', true)->count();
-                $absent = Attendance::where('student_id', $student->id)->whereYear('date', $year)->whereMonth('date', $month)->where('is_present', false)->count();
+            $monthlyCounts = Attendance::whereIn('student_id', $students->pluck('id'))
+                ->whereYear('date', $year)->whereMonth('date', $month)
+                ->selectRaw('student_id, SUM(CASE WHEN is_present = 1 THEN 1 ELSE 0 END) as present_count, SUM(CASE WHEN is_present = 0 THEN 1 ELSE 0 END) as absent_count')
+                ->groupBy('student_id')->get()->keyBy('student_id');
+
+            $records = $students->map(function ($student) use ($monthlyCounts) {
+                $counts = $monthlyCounts->get($student->id);
+                $present = (int) ($counts->present_count ?? 0);
+                $absent = (int) ($counts->absent_count ?? 0);
                 return ['student' => $student, 'present' => $present, 'absent' => $absent, 'marked_days' => $present + $absent];
             })->all();
             return view('history.class-history', $context + compact('monthStr', 'records'));
