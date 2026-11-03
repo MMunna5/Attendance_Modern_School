@@ -61,45 +61,62 @@ class SmsStatusController extends Controller
             return redirect()->route('sms-status.index');
         }
 
-        // Use a half-open date range so database indexes on sent_at/date can help.
+        // Aggregate sent, failed and pending records in one query per SMS table.
+        // Half-open ranges preserve the existing month boundaries and allow indexes.
         [$year, $month, $monthStr] = $this->monthBounds($request->query('month'));
         $monthStart = now('Asia/Dhaka')->setDate($year, $month, 1)->startOfDay();
         $nextMonthStart = $monthStart->copy()->addMonth();
 
-        $studentStats = AbsenceSms::where('status', AbsenceSms::STATUS_SENT)
-            ->where('sent_at', '>=', $monthStart)
-            ->where('sent_at', '<', $nextMonthStart)
-            ->selectRaw('COUNT(*) as sent, COALESCE(SUM(sms_segments), 0) as segments')
+        $dateStart = $monthStart->toDateString();
+        $nextDateStart = $nextMonthStart->toDateString();
+
+        $studentStats = AbsenceSms::query()
+            ->selectRaw(
+                'COALESCE(SUM(CASE WHEN status = ? AND sent_at >= ? AND sent_at < ? THEN 1 ELSE 0 END), 0) as sent,
+                 COALESCE(SUM(CASE WHEN status = ? AND sent_at >= ? AND sent_at < ? THEN sms_segments ELSE 0 END), 0) as segments,
+                 COALESCE(SUM(CASE WHEN status = ? AND date >= ? AND date < ? THEN 1 ELSE 0 END), 0) as failed,
+                 COALESCE(SUM(CASE WHEN status = ? AND date >= ? AND date < ? THEN 1 ELSE 0 END), 0) as pending',
+                [
+                    AbsenceSms::STATUS_SENT, $monthStart, $nextMonthStart,
+                    AbsenceSms::STATUS_SENT, $monthStart, $nextMonthStart,
+                    AbsenceSms::STATUS_FAILED, $dateStart, $nextDateStart,
+                    AbsenceSms::STATUS_PENDING, $dateStart, $nextDateStart,
+                ]
+            )
             ->first();
-        $teacherStats = TeacherAbsenceSms::where('status', TeacherAbsenceSms::STATUS_SENT)
-            ->where('sent_at', '>=', $monthStart)
-            ->where('sent_at', '<', $nextMonthStart)
-            ->selectRaw('COUNT(*) as sent, COALESCE(SUM(sms_segments), 0) as segments')
+
+        $teacherStats = TeacherAbsenceSms::query()
+            ->selectRaw(
+                'COALESCE(SUM(CASE WHEN status = ? AND sent_at >= ? AND sent_at < ? THEN 1 ELSE 0 END), 0) as sent,
+                 COALESCE(SUM(CASE WHEN status = ? AND sent_at >= ? AND sent_at < ? THEN sms_segments ELSE 0 END), 0) as segments,
+                 COALESCE(SUM(CASE WHEN status = ? AND date >= ? AND date < ? THEN 1 ELSE 0 END), 0) as failed,
+                 COALESCE(SUM(CASE WHEN status = ? AND date >= ? AND date < ? THEN 1 ELSE 0 END), 0) as pending',
+                [
+                    TeacherAbsenceSms::STATUS_SENT, $monthStart, $nextMonthStart,
+                    TeacherAbsenceSms::STATUS_SENT, $monthStart, $nextMonthStart,
+                    TeacherAbsenceSms::STATUS_FAILED, $dateStart, $nextDateStart,
+                    TeacherAbsenceSms::STATUS_PENDING, $dateStart, $nextDateStart,
+                ]
+            )
             ->first();
+
         $emergencyStats = EmergencySmsLog::where('sent_at', '>=', $monthStart)
             ->where('sent_at', '<', $nextMonthStart)
             ->selectRaw('COUNT(*) as sent, COALESCE(SUM(sms_segments), 0) as segments')
             ->first();
 
-        $dateStart = $monthStart->toDateString();
-        $nextDateStart = $nextMonthStart->toDateString();
-
         $counts = [
             'student' => [
                 'segments' => (int) $studentStats->segments,
                 'sent' => (int) $studentStats->sent,
-                'failed' => AbsenceSms::where('status', AbsenceSms::STATUS_FAILED)
-                    ->where('date', '>=', $dateStart)->where('date', '<', $nextDateStart)->count(),
-                'pending' => AbsenceSms::where('status', AbsenceSms::STATUS_PENDING)
-                    ->where('date', '>=', $dateStart)->where('date', '<', $nextDateStart)->count(),
+                'failed' => (int) $studentStats->failed,
+                'pending' => (int) $studentStats->pending,
             ],
             'teacher' => [
                 'segments' => (int) $teacherStats->segments,
                 'sent' => (int) $teacherStats->sent,
-                'failed' => TeacherAbsenceSms::where('status', TeacherAbsenceSms::STATUS_FAILED)
-                    ->where('date', '>=', $dateStart)->where('date', '<', $nextDateStart)->count(),
-                'pending' => TeacherAbsenceSms::where('status', TeacherAbsenceSms::STATUS_PENDING)
-                    ->where('date', '>=', $dateStart)->where('date', '<', $nextDateStart)->count(),
+                'failed' => (int) $teacherStats->failed,
+                'pending' => (int) $teacherStats->pending,
             ],
             'emergency' => [
                 'segments' => (int) $emergencyStats->segments,
