@@ -3,7 +3,6 @@
 @section('header_title', 'SMS Delivery Status')
 
 @section('header_links')
-<a href="{{ route('dashboard') }}" class="nav-btn">Dashboard</a>
 <form method="post" action="{{ route('logout') }}" class="inline">
     @csrf
     <button type="submit" class="nav-btn nav-btn-danger">Log Out</button>
