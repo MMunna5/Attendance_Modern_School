@@ -42,6 +42,22 @@
 .dashboard-quick-access-grid>a:nth-child(9){background:#f2f3f7!important;border-color:#d0d5e0!important}
 .dashboard-quick-access-grid>a:nth-child(9) h2{color:#4b5874!important}
 
+
+/* Deep, distinct Quick Access colours with high-contrast readable text */
+.dashboard-quick-access-grid>a:nth-child(1){background:#245a91!important;border-color:#194875!important}
+.dashboard-quick-access-grid>a:nth-child(2){background:#176b65!important;border-color:#10544f!important}
+.dashboard-quick-access-grid>a:nth-child(3){background:#5b478f!important;border-color:#493773!important}
+.dashboard-quick-access-grid>a:nth-child(4){background:#356b43!important;border-color:#285536!important}
+.dashboard-quick-access-grid>a:nth-child(5){background:#176b78!important;border-color:#10545f!important}
+.dashboard-quick-access-grid>a:nth-child(6){background:#8a5a18!important;border-color:#704710!important}
+.dashboard-quick-access-grid>a:nth-child(7){background:#91465b!important;border-color:#743749!important}
+.dashboard-quick-access-grid>a:nth-child(8){background:#285d85!important;border-color:#1e4969!important}
+.dashboard-quick-access-grid>a:nth-child(9){background:#4b5874!important;border-color:#3b465d!important}
+.dashboard-quick-access-grid>a h2{color:#fff!important}
+.dashboard-quick-access-grid>a p{color:rgba(255,255,255,.88)!important}
+.dashboard-quick-access-grid>a{box-shadow:0 3px 9px rgba(20,35,55,.13)!important}
+.dashboard-quick-access-grid>a:hover{filter:brightness(1.08)}
+
 </style>
 
 
@@ -135,7 +151,7 @@
             ['teacher-attendance-history', 'Teacher Attendance History', 'Monthly present/absent summary & Excel download'],
             ['students.upload', 'Upload Excel', 'Bulk import students from Excel file'],
             ['sms-status.index', 'SMS Status', 'See failed/pending absence SMS and retry them'],
-            ['emergency-sms.index', 'Emergency SMS / Notice', 'Send an urgent notice to all classes or selected students'],
+            ['emergency-sms.index', 'Bulk SMS', 'Send an urgent notice to all classes or selected students'],
         ];
     @endphp
     @foreach($links as [$route, $title, $desc])
