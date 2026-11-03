@@ -2,7 +2,6 @@
 @section('title', 'Emergency SMS - Attendance Register')
 @section('header_title', 'Emergency SMS / Notice')
 @section('header_links')
-<a href="{{ route('dashboard') }}" class="nav-btn">← Dashboard</a>
 @endsection
 
 @section('content')
